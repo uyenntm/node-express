@@ -9,58 +9,11 @@ const port = 3000;
 
 const app = express();
 app.use(morgan('dev'));
-app.use(express.static(__dirname+'/public'));
+
 app.use (bodyParser.json());
-
-//selete all dishes
-app.all('/dishes', (req,res,next)=>{
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    next();
-});
-
-//read all dishes
-app.get('/dishes',(req,res,next)=>{
-    res.end('Will send all the dishes to you!');
-});
-
-//create a dish
-app.post('/dishes',(req,res,next)=>{
-    res.end('Will add the dish: '+ req.body.name+' with details: '+ req.body.description);
-});
-
-// update all dishes
-app.put('/dishes',(req,res,next)=>{
-    res.statusCode= 403;
-    res.end('PUT operation not supported on /dishes');
-});
-
-//delete all dishes
-app.delete('/dishes', (req,res,next)=>{
-    res.end('Deleting all dishes');
-});
-
-//get detail a dish by dishId
-app.get('/dishes/:dishId', (req,res,next)=>{
-    res.end('Will send details of the dishes: '+ req.params.dishId+ ' to you!');
-});
-
-//create a dish by dishId
-app.post('/dishes/:dishId', (req, res, next) => {
-    res.statusCode = 403;
-    res.end('POST operation not supported on /dishes/'+ req.params.dishId);
-  });
-//update  detail a dish by dishId
-app.put('/dishes/:dishId',(req,res,next)=>{
-    res.write('Updating the dish: '+ req.params.dishId+ '\n');
-    res.end('Will update the dish: ' + req.body.name + 
-        ' with details: ' + req.body.description); 
-});
-
-//delete a dish by dishId
-app.delete('/dishes/:dishId', (req, res, next) => {
-    res.end('Deleting dish: ' + req.params.dishId);
-});
+const dishRouter = require('./routes/dishRouter');
+app.use('/dishes',dishRouter);
+app.use(express.static(__dirname+'/public'));
 
 app.use((req,res, next)=>{
     console.log(req.headers);
